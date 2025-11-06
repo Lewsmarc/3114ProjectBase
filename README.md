@@ -12,7 +12,7 @@ Smilarity which is based on the closest average of another reveiwer's or movie's
 -3 or 4 days
 #Phase 2: Delete, print, similiarity functionality
 -5 days
-#Phase 3: Debugging, likely one refactor, and mutation coverage
+#Phase 3: Debugging, likely one refactor, and junit tests + mutation coverage
 -5 days
 
 Sparse matrix: Stores a 2d matrix with minimal space overhead by only storing filled in data nodes. The headers for each axis of the matrix is stored as a DLL of header node for the internal DLL which contain reviewer, movie, and score data as ints.
