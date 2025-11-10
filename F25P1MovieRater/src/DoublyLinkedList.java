@@ -31,10 +31,10 @@ public class DoublyLinkedList{
         public void setScore(int rating){
             score = rating;
         }
-        public void setNext(DLL newNext){
+        public void setNext(DLLNode newNext){
             next = newNext;
         }
-        public void setPrev(DLL newPrev){
+        public void setPrev(DLLNode newPrev){
             prev = newPrev;
         }
 
@@ -43,34 +43,34 @@ public class DoublyLinkedList{
         }
     }
         private DLLNode head;
-        private DLLNode headSentinel;
+        private DLLNode tail;
 
         public DoublyLinkedList(){
-            head = null;
-            headSentinel = null;
-            headSentinel.setNext(head);
-            head.setPrev(null);
+            head = new DLLNode(-1,-1,-1);
+            tail = new DLLNode(-1,-1,-1);
+            head.setNext(tail);
+            tail.setPrev(head);
         }
 
         public void insert(int rating, int review, int pic){
             DLLNode curr = head;
 
-            while(curr.getNext != null){
+            while(!curr.getNext().equals(-1,-1,-1)){
                 if(curr.getMovie() > pic && curr.getNext().getMovie() <= pic){
                     break;
                 }
                 if(curr.getReviewer() > review && curr.getNext().getReviewer() <= review){
                     break;
                 }
-                curr.setNext(curr.getNext);
+                curr = curr.getNext();
             }
-            if(curr.equals(rating, review, pic)){
+            if(curr != null && curr.equals(rating, review, pic)){
                 curr.setScore(rating);
             }
             else{
                 DLLNode insertNode = new DLLNode(rating, review, pic);
-                DLLNode.setNext(curr.getNext());
-                DLLNode.setPrev(curr.getPrev());
+                insertNode.setNext(curr.getNext());
+                insertNode.setPrev(curr.getPrev());
                 curr.setNext(insertNode);
                 curr.getNext().setPrev(insertNode);
             }
@@ -78,7 +78,7 @@ public class DoublyLinkedList{
 
         public boolean search(int rating, int review, int pic){
             DLLNode curr = head;
-            while(curr.getNext != null){
+            while(curr.getNext() != null){
                 if(curr.equals(rating, review, pic)){
                     return true;
                 }
@@ -88,10 +88,10 @@ public class DoublyLinkedList{
 
         public void delete(int rating, int review, int pic){
             DLLNode curr = head;
-            while(curr.getNext != null){
+            while(curr.getNext() != null){
                 if(curr.equals(rating, review, pic)){
                     DLLNode buff = curr.getPrev();
-                    buff.setNext(curr.getNext);
+                    buff.setNext(curr.getNext());
                     buff.getNext().setPrev(buff);
                 }
             }
@@ -101,7 +101,7 @@ public class DoublyLinkedList{
             DLLNode curr = head;
             int sum = 0;
             int count = 0;
-            while(curr.getNext != null){
+            while(curr.getNext() != null){
                 sum += curr.getScore();
                 count++;
             }
