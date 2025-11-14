@@ -1,10 +1,28 @@
 public class SparseMatrix {
-    private DoublyLinkedList reviewers;
-    private DoublyLinkedList movies;
-
+    private HeaderNode reviewers;
+    private HeaderNode movies;
+    private class MatrixNode {
+         private int score;
+         private int reviewer;
+         private int movie;
+         
+         private MatrixNode next, prev, left, right;
+    }
+    private class HeaderNode{
+        
+        //Single linked list
+        private int id;
+        private MatrixNode first;
+        private HeaderNode next;
+        
+        public HeaderNode(int name) {
+            id = name;
+        }
+    }
+    
     public SparseMatrix() {
-        reviewers = new DoublyLinkedList();
-        movies = new DoublyLinkedList();
+        reviewers = new HeaderNode(-1);
+        movies = new HeaderNode(-1);
     }
 
 

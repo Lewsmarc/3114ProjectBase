@@ -1,8 +1,11 @@
 public class DoublyLinkedList {
     private class DLLNode {
-        private int score;
-        private int reviewer;
-        private int movie;
+        /*
+         * private int score;
+         * private int reviewer;
+         * private int movie;
+         */
+        private E data;
         private DLLNode prev;
         private DLLNode next;
 
@@ -60,6 +63,7 @@ public class DoublyLinkedList {
 
     private DLLNode head;
     private DLLNode tail;
+    //private E data;
 
     public DoublyLinkedList() {
         head = new DLLNode(-1, -1, -1);
