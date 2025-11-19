@@ -8,10 +8,10 @@ public class SparseMatrixTest extends student.TestCase {
 
 
     public void testInsert() {
-        test.insert(8, 0, 0);
-        test.insert(9, 2, 0);
-        test.insert(1, 0, 1);
-        test.insert(9, 4, 11);
+        test.insertScore(8, 0, 0);
+        test.insertScore(9, 2, 0);
+        test.insertScore(1, 0, 1);
+        test.insertScore(9, 4, 11);
 
         assertFalse(test.search(0, 0, 0));
         assertTrue(test.search(8, 0, 0));
@@ -22,10 +22,10 @@ public class SparseMatrixTest extends student.TestCase {
 
 
     public void testDelete() {
-        test.insert(8, 0, 0);
-        test.insert(9, 2, 0);
-        test.insert(1, 0, 1);
-        test.insert(9, 4, 11);
+        test.insertScore(8, 0, 0);
+        test.insertScore(9, 2, 0);
+        test.insertScore(1, 0, 1);
+        test.insertScore(9, 4, 11);
 
         assertFalse(test.search(0, 0, 0));
         assertTrue(test.search(8, 0, 0));
