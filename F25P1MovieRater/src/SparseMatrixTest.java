@@ -12,6 +12,8 @@ public class SparseMatrixTest extends student.TestCase {
         test.insertScore(9, 2, 0);
         test.insertScore(1, 0, 1);
         test.insertScore(9, 4, 11);
+        
+        test.search(8, 0, 0);
 
         assertFalse(test.search(0, 0, 0));
         assertTrue(test.search(8, 0, 0));
