@@ -56,9 +56,8 @@ public class SparseMatrix {
         }
 
 
-        public String toString() {
-            return "Movie: " + movie + "Reviewer: " + reviewer
-                + "This reviewer gave a score of: " + score;
+        public boolean equals(int review, int pic) {
+            return reviewer == review && movie == pic;
         }
     }
 
@@ -247,16 +246,39 @@ public class SparseMatrix {
     }
 
 
-    public void delete(int score, int reviewer, int movie) {
+    public boolean search(int reviewer, int movie) {
         if (reviewers.getNext() == null) {
-            return;
+            return false;
         }
-        deleteByRow(score, reviewer, movie);
-        deleteByColumn(score, reviewer, movie);
+
+        HeaderNode curr = reviewers.getNext();
+        while (curr != null) {
+            if (reviewer == curr.getID()) {
+                MatrixNode matrixSearch = curr.getFirst();
+                while (matrixSearch != null) {
+                    if (matrixSearch.getReviewer() == reviewer && matrixSearch
+                        .getMovie() == movie) {
+                        return true;
+                    }
+                    matrixSearch = matrixSearch.getRight();
+                }
+            }
+            curr = curr.getNext();
+        }
+        return false;
     }
 
 
-    public void deleteByRow(int score, int reviewer, int movie) {
+    public void delete(int reviewer, int movie) {
+        if (reviewers.getNext() == null) {
+            return;
+        }
+        deleteByRow(reviewer, movie);
+        deleteByColumn(reviewer, movie);
+    }
+
+
+    public void deleteByRow(int reviewer, int movie) {
         if (reviewers.getNext() == null) {
             return;
         }
@@ -266,7 +288,7 @@ public class SparseMatrix {
         while (curr != null) {
             if (reviewer == curr.getID()) {
                 MatrixNode matrixDelete = curr.getFirst();
-                if (matrixDelete.equals(score, reviewer, movie)) {
+                if (matrixDelete.equals(reviewer, movie)) {
                     curr.setFirst(matrixDelete.getRight());
                     if (curr.getFirst() == null) {
                         prev.setNext(curr);
@@ -274,8 +296,7 @@ public class SparseMatrix {
                     return;
                 }
                 while (matrixDelete != null) {
-                    if (matrixDelete.getRight().equals(score, reviewer,
-                        movie)) {
+                    if (matrixDelete.getRight().equals(reviewer, movie)) {
                         /**
                          * Cases: list still has entries so keep the current
                          * headernode, or list becomes empty so headernode must
@@ -297,7 +318,7 @@ public class SparseMatrix {
     }
 
 
-    public void deleteByColumn(int score, int reviewer, int movie) {
+    public void deleteByColumn(int reviewer, int movie) {
         if (movies.getNext() == null) {
             return;
         }
@@ -306,7 +327,7 @@ public class SparseMatrix {
         while (curr != null) {
             if (movie == curr.getID()) {
                 MatrixNode matrixDelete = curr.getFirst();
-                if (matrixDelete.equals(score, reviewer, movie)) {
+                if (matrixDelete.equals(reviewer, movie)) {
                     curr.setFirst(matrixDelete.getDown());
                     if (curr.getFirst() == null) {
                         prev.setNext(curr);
@@ -314,7 +335,7 @@ public class SparseMatrix {
                     return;
                 }
                 while (matrixDelete != null) {
-                    if (matrixDelete.getDown().equals(score, reviewer, movie)) {
+                    if (matrixDelete.getDown().equals(reviewer, movie)) {
                         matrixDelete.setDown(matrixDelete.getDown().getDown());
                         return;
                     }
@@ -405,15 +426,46 @@ public class SparseMatrix {
 
 
     public void print() {
-        HeaderNode curr = movies.getNext();
+        HeaderNode curr = reviewers.getNext();
         while (curr != null) {
             MatrixNode matrixPrint = curr.getFirst();
+            System.out.print(curr.getID() + ": ");
             while (matrixPrint != null) {
-                System.out.println(matrixPrint);
-                matrixPrint = matrixPrint.getDown();
+                if (matrixPrint.getRight() == null) {
+                    System.out.print("(" + matrixPrint.getMovie() + ", "
+                        + matrixPrint.getScore() + ")\n");
+                }
+                else {
+                    System.out.print("(" + matrixPrint.getMovie() + ", "
+                        + matrixPrint.getScore() + ") ");
+                }
+                matrixPrint = matrixPrint.getRight();
             }
             curr = curr.getNext();
         }
+    }
+
+
+    public String toString() {
+        HeaderNode curr = reviewers.getNext();
+        String returnString = "";
+        while (curr != null) {
+            MatrixNode matrixPrint = curr.getFirst();
+            returnString.concat(curr.getID() + ": ");
+            while (matrixPrint != null) {
+                if (matrixPrint.getRight() == null) {
+                    returnString.concat("(" + matrixPrint.getMovie() + ", "
+                        + matrixPrint.getScore() + ")\n");
+                }
+                else {
+                    returnString.concat("(" + matrixPrint.getMovie() + ", "
+                        + matrixPrint.getScore() + ") ");
+                }
+                matrixPrint = matrixPrint.getRight();
+            }
+            curr = curr.getNext();
+        }
+        return returnString;
     }
 
 
@@ -492,7 +544,7 @@ public class SparseMatrix {
         while (curr != null) {
             if (index != curr.getID()) {
                 double similarCheck = averageColumn(curr.getID());
-                if(Math.abs(benchmark - similarCheck) < diff) {
+                if (Math.abs(benchmark - similarCheck) < diff) {
                     diff = benchmark - similarCheck;
                     mostSimilar = curr.getID();
                 }
@@ -500,5 +552,79 @@ public class SparseMatrix {
             curr = curr.getNext();
         }
         return mostSimilar;
+    }
+
+
+    public boolean rowExists(int index) {
+        HeaderNode curr = reviewers.getNext();
+        while (curr != null) {
+            if (curr.getID() == index) {
+                return true;
+            }
+            curr = curr.getNext();
+        }
+        return false;
+    }
+
+
+    public boolean colExists(int index) {
+        HeaderNode curr = movies.getNext();
+        while (curr != null) {
+            if (curr.getID() == index) {
+                return true;
+            }
+            curr = curr.getNext();
+        }
+        return false;
+    }
+
+
+    public String getRow(int index) {
+        HeaderNode curr = reviewers.getNext();
+        String returnString = "";
+        while (curr != null) {
+            if (curr.getID() == index) {
+                MatrixNode matrixPrint = curr.getFirst();
+                returnString.concat(curr.getID() + ": ");
+                while (matrixPrint != null) {
+                    if (matrixPrint.getRight() == null) {
+                        returnString.concat("(" + matrixPrint.getMovie() + ", "
+                            + matrixPrint.getScore() + ")\n");
+                    }
+                    else {
+                        returnString.concat("(" + matrixPrint.getMovie() + ", "
+                            + matrixPrint.getScore() + ") ");
+                    }
+                    matrixPrint = matrixPrint.getRight();
+                }
+            }
+            curr = curr.getNext();
+        }
+        return returnString;
+    }
+
+
+    public String getCol(int index) {
+        HeaderNode curr = reviewers.getNext();
+        String returnString = "";
+        while (curr != null) {
+            if (curr.getID() == index) {
+                MatrixNode matrixPrint = curr.getFirst();
+                returnString.concat(curr.getID() + ": ");
+                while (matrixPrint != null) {
+                    if (matrixPrint.getRight() == null) {
+                        returnString.concat("(" + matrixPrint.getMovie() + ", "
+                            + matrixPrint.getScore() + ")\n");
+                    }
+                    else {
+                        returnString.concat("(" + matrixPrint.getMovie() + ", "
+                            + matrixPrint.getScore() + ") ");
+                    }
+                    matrixPrint = matrixPrint.getRight();
+                }
+            }
+            curr = curr.getNext();
+        }
+        return returnString;
     }
 }

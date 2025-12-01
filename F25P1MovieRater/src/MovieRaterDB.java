@@ -8,12 +8,14 @@
  *
  */
 public class MovieRaterDB implements MovieRater {
+    private SparseMatrix matrix;
 
     // ----------------------------------------------------------
     /**
      * Create a new MovieRaterDB object.
      */
     MovieRaterDB() {
+        matrix = new SparseMatrix();
     }
 
     // ----------------------------------------------------------
@@ -22,6 +24,7 @@ public class MovieRaterDB implements MovieRater {
      * @return true on clear
      */
     public boolean clear() {
+        matrix = new SparseMatrix();
         return true;
     }
 
@@ -41,6 +44,10 @@ public class MovieRaterDB implements MovieRater {
      */
     public boolean addReview(int reviewer, int movie, int score) {
         // Scores must be in the range 1 to 10.
+        if(score > 10 || score < 0) {
+            return false;
+        }
+        matrix.insertScore(score, reviewer, movie);
         return true;
     }
 
@@ -54,7 +61,10 @@ public class MovieRaterDB implements MovieRater {
      *         False if no such reviewer in the database.
      */
     public boolean deleteReviewer(int reviewer) {
-        return true;
+        if(matrix.rowExists(reviewer)) {
+          matrix.removeRow(reviewer);  
+        }
+        return false;
     }
 
 
@@ -67,7 +77,10 @@ public class MovieRaterDB implements MovieRater {
      *         False if no such movie in the database.
      */
     public boolean deleteMovie(int movie) {
-        return true;
+        if(matrix.colExists(movie)) {
+            matrix.removeColumn(movie);  
+          }
+          return false;
     }
 
 
@@ -81,6 +94,9 @@ public class MovieRaterDB implements MovieRater {
      *         False if no such score in the database.
      */
     public boolean deleteScore(int reviewer, int movie) {
+        if(matrix.search(reviewer, movie)) {
+            matrix.delete(reviewer, movie);
+        }
         return true;
     }
 
@@ -93,7 +109,7 @@ public class MovieRaterDB implements MovieRater {
      * @return String representing the listing, empty string if there are none
      */
     public String printRatings() {
-        return "";
+        return matrix.toString();
     }
 
 
@@ -105,7 +121,7 @@ public class MovieRaterDB implements MovieRater {
      * @return String representing the listing, null if no such reviewer
      */
     public String listReviewer(int reviewer) {
-        return "";
+        return matrix.getRow(reviewer);
     }
 
 
@@ -117,7 +133,7 @@ public class MovieRaterDB implements MovieRater {
      * @return String representing the listing, null if no such movie
      */
     public String listMovie(int movie) {
-        return "";
+        return matrix.getCol(movie);
     }
 
 
@@ -130,7 +146,7 @@ public class MovieRaterDB implements MovieRater {
      *           suitable match
      */
     public int similarMovie(int movie) {
-        return -1;
+        return matrix.similarMovie(movie);
     }
 
 
@@ -143,6 +159,6 @@ public class MovieRaterDB implements MovieRater {
      *           suitable match
      */
     public int similarReviewer(int reviewer) {
-        return -1;
+        return matrix.similarReviewer(reviewer);
     }
 }

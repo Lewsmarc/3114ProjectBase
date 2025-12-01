@@ -36,9 +36,9 @@ public class SparseMatrixTest extends student.TestCase {
         assertTrue(test.search(9, 4, 11));
         assertFalse(test.search(1, 1, 1));
 
-        test.delete(1, 0, 1);
-        test.delete(8, 0, 0);
-        test.delete(9, 4, 11);
+        test.delete(0, 1);
+        test.delete(0, 0);
+        test.delete(4, 11);
         
         test.search(0, 0, 0);
 
@@ -79,6 +79,24 @@ public class SparseMatrixTest extends student.TestCase {
         assertFalse(test.search(3, 8, 5));
         assertFalse(test.search(1, 9, 5));
         assertFalse(test.search(9, 11, 5));
+    }
+    
+    public void testPrint() {
+        test.insertScore(8, 0, 0);
+        test.insertScore(9, 2, 0);
+        test.insertScore(1, 0, 1);
+        test.insertScore(9, 4, 11);
+        test.insertScore(2, 0, 11);
+        test.insertScore(4, 0, 3);
+        test.insertScore(7, 0, 6);
+        test.insertScore(4, 0, 4);
+        test.insertScore(2, 1, 5);
+        test.insertScore(5, 2, 5);
+        test.insertScore(3, 8, 5);
+        test.insertScore(1, 9, 5);
+        test.insertScore(9, 11, 5);
+        test.insertScore(9, 15, 5);
         
+        test.print();
     }
 }
