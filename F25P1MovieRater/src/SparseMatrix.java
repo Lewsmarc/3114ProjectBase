@@ -7,7 +7,7 @@ public class SparseMatrix {
         private int reviewer;
         private int movie;
 
-        private MatrixNode down, up, left, right;
+        private MatrixNode down, right;
 
         public MatrixNode(int rating, int name, int movieID) {
             score = rating;
@@ -53,6 +53,12 @@ public class SparseMatrix {
 
         public boolean equals(int rating, int review, int pic) {
             return score == rating && reviewer == review && movie == pic;
+        }
+
+
+        public String toString() {
+            return "Movie: " + movie + "Reviewer: " + reviewer
+                + "This reviewer gave a score of: " + score;
         }
     }
 
@@ -395,5 +401,104 @@ public class SparseMatrix {
             }
             curr = curr.getNext();
         }
+    }
+
+
+    public void print() {
+        HeaderNode curr = movies.getNext();
+        while (curr != null) {
+            MatrixNode matrixPrint = curr.getFirst();
+            while (matrixPrint != null) {
+                System.out.println(matrixPrint);
+                matrixPrint = matrixPrint.getDown();
+            }
+            curr = curr.getNext();
+        }
+    }
+
+
+    public double averageColumn(int index) {
+        HeaderNode curr = movies.getNext();
+        int scoreSum = 0;
+        int count = 0;
+        while (curr != null) {
+            if (index == curr.getID()) {
+                MatrixNode matrixPrint = curr.getFirst();
+                while (matrixPrint != null) {
+                    scoreSum += matrixPrint.getScore();
+                    count++;
+                    matrixPrint = matrixPrint.getDown();
+                }
+            }
+            curr = curr.getNext();
+        }
+        if (count == 0) {
+            return -1;
+        }
+        else {
+            return (double)scoreSum / count;
+        }
+    }
+
+
+    public double averageRow(int index) {
+        HeaderNode curr = reviewers.getNext();
+        int scoreSum = 0;
+        int count = 0;
+        while (curr != null) {
+            if (index == curr.getID()) {
+                MatrixNode matrixPrint = curr.getFirst();
+                while (matrixPrint != null) {
+                    scoreSum += matrixPrint.getScore();
+                    count++;
+                    matrixPrint = matrixPrint.getDown();
+                }
+            }
+            curr = curr.getNext();
+        }
+        if (count == 0) {
+            return -1;
+        }
+        else {
+            return (double)scoreSum / count;
+        }
+    }
+
+
+    public int similarMovie(int index) {
+        HeaderNode curr = movies.getNext();
+        double benchmark = averageColumn(index);
+        double diff = 0;
+        int mostSimilar = -1;
+        while (curr != null) {
+            if (index != curr.getID()) {
+                double similarCheck = averageColumn(curr.getID());
+                if (Math.abs(benchmark - similarCheck) < diff) {
+                    diff = benchmark - similarCheck;
+                    mostSimilar = curr.getID();
+                }
+            }
+            curr = curr.getNext();
+        }
+        return mostSimilar;
+    }
+
+
+    public int similarReviewer(int index) {
+        HeaderNode curr = movies.getNext();
+        double benchmark = averageColumn(index);
+        double diff = 0;
+        int mostSimilar = -1;
+        while (curr != null) {
+            if (index != curr.getID()) {
+                double similarCheck = averageColumn(curr.getID());
+                if(Math.abs(benchmark - similarCheck) < diff) {
+                    diff = benchmark - similarCheck;
+                    mostSimilar = curr.getID();
+                }
+            }
+            curr = curr.getNext();
+        }
+        return mostSimilar;
     }
 }
