@@ -44,7 +44,7 @@ public class MovieRaterDB implements MovieRater {
      */
     public boolean addReview(int reviewer, int movie, int score) {
         // Scores must be in the range 1 to 10.
-        if(score > 10 || score < 0) {
+        if(score > 10 || score <= 0) {
             return false;
         }
         matrix.insertScore(score, reviewer, movie);
@@ -110,6 +110,7 @@ public class MovieRaterDB implements MovieRater {
      * @return String representing the listing, empty string if there are none
      */
     public String printRatings() {
+        System.out.println(matrix);
         return matrix.toString();
     }
 

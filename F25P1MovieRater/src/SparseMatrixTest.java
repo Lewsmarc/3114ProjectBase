@@ -99,4 +99,16 @@ public class SparseMatrixTest extends student.TestCase {
         
         test.print();
     }
+    public void testPrint2() {
+        test.insertScore(7, 2, 3);
+        test.insertScore(5, 2, 5);
+        
+        test.toString();
+        
+        assertFuzzyEquals(test.toString(), "2: (3, 7) (5, 5)");
+        
+        test.getCol(3);
+        
+        assertFuzzyEquals(test.getCol(3), "3: 7");
+    }
 }
