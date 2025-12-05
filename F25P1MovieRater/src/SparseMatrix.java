@@ -600,6 +600,9 @@ public class SparseMatrix {
             }
             curr = curr.getNext();
         }
+        if(returnString.equals("")) {
+            return null;
+        }
         return returnString;
     }
 
@@ -624,6 +627,9 @@ public class SparseMatrix {
                 }
             }
             curr = curr.getNext();
+        }
+        if(returnString.equals("")) {
+            return null;
         }
         return returnString;
     }

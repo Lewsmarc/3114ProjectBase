@@ -96,8 +96,9 @@ public class MovieRaterDB implements MovieRater {
     public boolean deleteScore(int reviewer, int movie) {
         if(matrix.search(reviewer, movie)) {
             matrix.delete(reviewer, movie);
+            return true;
         }
-        return true;
+        return false;
     }
 
 
