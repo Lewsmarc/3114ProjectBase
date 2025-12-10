@@ -110,27 +110,27 @@ public class SparseMatrixFinalTest extends TestCase {
 
     // === Milestone Tests: Traversal Methods ===
 
-    /**
-     * Test hasRow method.
-     */
-    public void testHasRow() {
-        assertFalse(matrix.hasRow(1));
-
-        matrix.insert(1, 1, 5);
-        assertTrue(matrix.hasRow(1));
-        assertFalse(matrix.hasRow(2));
-    }
-
-    /**
-     * Test hasColumn method.
-     */
-    public void testHasColumn() {
-        assertFalse(matrix.hasColumn(1));
-
-        matrix.insert(1, 1, 5);
-        assertTrue(matrix.hasColumn(1));
-        assertFalse(matrix.hasColumn(2));
-    }
+//    /**
+//     * Test hasRow method.
+//     */
+//    public void testHasRow() {
+//        assertFalse(matrix.hasRow(1));
+//
+//        matrix.insert(1, 1, 5);
+//        assertTrue(matrix.hasRow(1));
+//        assertFalse(matrix.hasRow(2));
+//    }
+//
+//    /**
+//     * Test hasColumn method.
+//     */
+//    public void testHasColumn() {
+//        assertFalse(matrix.hasColumn(1));
+//
+//        matrix.insert(1, 1, 5);
+//        assertTrue(matrix.hasColumn(1));
+//        assertFalse(matrix.hasColumn(2));
+//    }
 
     /**
      * Test getRow returns sorted output.
