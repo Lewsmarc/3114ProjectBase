@@ -136,11 +136,10 @@ public class SparseMatrixFinalTest extends TestCase {
      * Test getRow returns sorted output.
      */
     public void testGetRowSorted() {
-        matrix.insert(1, 3, 7);
-        matrix.insert(1, 1, 5);
-        matrix.insert(1, 2, 6);
+        matrix.insert(7, 1, 3);
+        matrix.insert(5, 1, 1);
+        matrix.insert(6, 1, 2);
 
-        int[][] row = matrix.getRow(1);
         assertEquals(3, row.length);
 
         // Verify sorted by column
