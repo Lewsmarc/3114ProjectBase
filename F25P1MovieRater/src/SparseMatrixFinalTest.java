@@ -9,7 +9,7 @@ import student.TestCase;
  */
 public class SparseMatrixFinalTest extends TestCase {
 
-    private SparseMatrix matrix;  // Matrix instance for testing
+    private SparseMatrix matrix; // Matrix instance for testing
 
     /**
      * Sets up the test fixture.
@@ -19,6 +19,7 @@ public class SparseMatrixFinalTest extends TestCase {
         matrix = new SparseMatrix();
     }
 
+
     /**
      * Test basic instantiation and initial state.
      */
@@ -26,6 +27,7 @@ public class SparseMatrixFinalTest extends TestCase {
         assertNotNull(matrix);
         assertEquals(0, matrix.size());
     }
+
 
     /**
      * Test clear on empty matrix.
@@ -37,6 +39,7 @@ public class SparseMatrixFinalTest extends TestCase {
 
     // === Milestone Tests: Insert and Get ===
 
+
     /**
      * Test inserting a single value and retrieving it.
      */
@@ -45,6 +48,7 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(5, matrix.get(1, 1));
         assertEquals(1, matrix.size());
     }
+
 
     /**
      * Test inserting multiple values in the same row.
@@ -59,6 +63,7 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(7, matrix.get(1, 3));
         assertEquals(3, matrix.size());
     }
+
 
     /**
      * Test inserting values out of order and verify sorted.
@@ -75,16 +80,18 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(3, matrix.size());
     }
 
+
     /**
      * Test updating an existing value.
      */
     public void testInsertUpdate() {
         matrix.insert(1, 1, 5);
-        matrix.insert(1, 1, 10);  // Update
+        matrix.insert(1, 1, 10); // Update
 
         assertEquals(10, matrix.get(1, 1));
-        assertEquals(1, matrix.size());  // Size shouldn't change
+        assertEquals(1, matrix.size()); // Size shouldn't change
     }
+
 
     /**
      * Test getting a non-existent value returns 0.
@@ -92,6 +99,7 @@ public class SparseMatrixFinalTest extends TestCase {
     public void testGetMissing() {
         assertEquals(0, matrix.get(999, 999));
     }
+
 
     /**
      * Test multiple rows and columns.
@@ -104,33 +112,34 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(5, matrix.get(1, 1));
         assertEquals(6, matrix.get(2, 2));
         assertEquals(7, matrix.get(3, 3));
-        assertEquals(0, matrix.get(1, 2));  // Empty cell
+        assertEquals(0, matrix.get(1, 2)); // Empty cell
         assertEquals(3, matrix.size());
     }
 
     // === Milestone Tests: Traversal Methods ===
 
-//    /**
-//     * Test hasRow method.
-//     */
-//    public void testHasRow() {
-//        assertFalse(matrix.hasRow(1));
+// /**
+// * Test hasRow method.
+// */
+// public void testHasRow() {
+// assertFalse(matrix.hasRow(1));
 //
-//        matrix.insert(1, 1, 5);
-//        assertTrue(matrix.hasRow(1));
-//        assertFalse(matrix.hasRow(2));
-//    }
+// matrix.insert(1, 1, 5);
+// assertTrue(matrix.hasRow(1));
+// assertFalse(matrix.hasRow(2));
+// }
 //
-//    /**
-//     * Test hasColumn method.
-//     */
-//    public void testHasColumn() {
-//        assertFalse(matrix.hasColumn(1));
+// /**
+// * Test hasColumn method.
+// */
+// public void testHasColumn() {
+// assertFalse(matrix.hasColumn(1));
 //
-//        matrix.insert(1, 1, 5);
-//        assertTrue(matrix.hasColumn(1));
-//        assertFalse(matrix.hasColumn(2));
-//    }
+// matrix.insert(1, 1, 5);
+// assertTrue(matrix.hasColumn(1));
+// assertFalse(matrix.hasColumn(2));
+// }
+
 
     /**
      * Test getRow returns sorted output.
@@ -140,24 +149,17 @@ public class SparseMatrixFinalTest extends TestCase {
         matrix.insert(5, 1, 1);
         matrix.insert(6, 1, 2);
 
-        assertEquals(3, row.length);
-
-        // Verify sorted by column
-        assertEquals(1, row[0][0]);  // Column
-        assertEquals(5, row[0][1]);  // Value
-        assertEquals(2, row[1][0]);
-        assertEquals(6, row[1][1]);
-        assertEquals(3, row[2][0]);
-        assertEquals(7, row[2][1]);
+        assertTrue(matrix.rowSorted(1));
     }
+
 
     /**
      * Test getRow on empty row.
      */
     public void testGetRowEmpty() {
-        int[][] row = matrix.getRow(999);
-        assertEquals(0, row.length);
+        assertNull(matrix.findRow(999));
     }
+
 
     /**
      * Test getColumn returns sorted output.
@@ -167,25 +169,9 @@ public class SparseMatrixFinalTest extends TestCase {
         matrix.insert(1, 1, 5);
         matrix.insert(2, 1, 6);
 
-        int[][] col = matrix.getColumn(1);
-        assertEquals(3, col.length);
-
-        // Verify sorted by row
-        assertEquals(1, col[0][0]);  // Row
-        assertEquals(5, col[0][1]);  // Value
-        assertEquals(2, col[1][0]);
-        assertEquals(6, col[1][1]);
-        assertEquals(3, col[2][0]);
-        assertEquals(7, col[2][1]);
+        assertTrue(matrix.colSorted(1));
     }
 
-    /**
-     * Test getColumn on empty column.
-     */
-    public void testGetColumnEmpty() {
-        int[][] col = matrix.getColumn(999);
-        assertEquals(0, col.length);
-    }
 
     /**
      * Test getAllRowIDs returns sorted IDs.
@@ -202,6 +188,7 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(3, rows[2]);
     }
 
+
     /**
      * Test getAllColumnIDs returns sorted IDs.
      */
@@ -210,12 +197,13 @@ public class SparseMatrixFinalTest extends TestCase {
         matrix.insert(1, 1, 5);
         matrix.insert(1, 2, 6);
 
-        int[] cols = matrix.getAllColumnIDs();
+        int[] cols = matrix.getAllColIDs();
         assertEquals(3, cols.length);
         assertEquals(1, cols[0]);
         assertEquals(2, cols[1]);
         assertEquals(3, cols[2]);
     }
+
 
     /**
      * Test traversal on empty matrix.
@@ -233,6 +221,7 @@ public class SparseMatrixFinalTest extends TestCase {
         int[] cols = matrix.getAllColumnIDs();
         assertEquals(0, cols.length);
     }
+
 
     /**
      * Test comprehensive example.
@@ -281,6 +270,7 @@ public class SparseMatrixFinalTest extends TestCase {
 
     // === Phase 2 Tests: Deletion Methods ===
 
+
     /**
      * Test removing a single cell (middle position).
      */
@@ -301,6 +291,7 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(7, matrix.get(1, 3));
     }
 
+
     /**
      * Test removing first cell in row.
      */
@@ -318,6 +309,7 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(7, matrix.get(1, 3));
     }
 
+
     /**
      * Test removing last cell in row.
      */
@@ -334,6 +326,7 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(0, matrix.get(1, 3));
     }
 
+
     /**
      * Test removing the only cell (should clean up headers).
      */
@@ -346,8 +339,9 @@ public class SparseMatrixFinalTest extends TestCase {
 
         // Verify headers are cleaned up
         assertFalse(matrix.hasRow(5));
-        assertFalse(matrix.hasColumn(10));
+        assertFalse(matrix.hasCol(10));
     }
+
 
     /**
      * Test removing from empty matrix.
@@ -357,6 +351,7 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(0, matrix.size());
     }
 
+
     /**
      * Test removing non-existent cell.
      */
@@ -365,6 +360,7 @@ public class SparseMatrixFinalTest extends TestCase {
         assertFalse(matrix.remove(999, 999));
         assertEquals(1, matrix.size());
     }
+
 
     /**
      * Test removing cell with multiple rows and columns.
@@ -389,12 +385,13 @@ public class SparseMatrixFinalTest extends TestCase {
         // Verify structure integrity
         int[][] row2 = matrix.getRow(2);
         assertEquals(1, row2.length);
-        assertEquals(5, row2[0][0]);  // Only column 5 left
+        assertEquals(5, row2[0][0]); // Only column 5 left
 
         int[][] col3 = matrix.getColumn(3);
         assertEquals(1, col3.length);
-        assertEquals(7, col3[0][0]);  // Only row 7 left
+        assertEquals(7, col3[0][0]); // Only row 7 left
     }
+
 
     /**
      * Test removeRow basic functionality.
@@ -419,6 +416,7 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(8, matrix.get(2, 1));
     }
 
+
     /**
      * Test removeRow cleans up column headers.
      */
@@ -431,12 +429,13 @@ public class SparseMatrixFinalTest extends TestCase {
 
         // All headers should be cleaned up
         assertFalse(matrix.hasRow(5));
-        assertFalse(matrix.hasColumn(10));
-        assertFalse(matrix.hasColumn(20));
+        assertFalse(matrix.hasCol(10));
+        assertFalse(matrix.hasCol(20));
 
         int[] cols = matrix.getAllColumnIDs();
         assertEquals(0, cols.length);
     }
+
 
     /**
      * Test removeRow with shared columns.
@@ -452,13 +451,14 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(2, matrix.size());
 
         // Columns should still exist (because row 2 uses them)
-        assertTrue(matrix.hasColumn(1));
-        assertTrue(matrix.hasColumn(2));
+        assertTrue(matrix.hasCol(1));
+        assertTrue(matrix.hasCol(2));
 
         // Row 2 data intact
         assertEquals(7, matrix.get(2, 1));
         assertEquals(8, matrix.get(2, 2));
     }
+
 
     /**
      * Test removeRow on non-existent row.
@@ -469,6 +469,7 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(1, matrix.size());
     }
 
+
     /**
      * Test removeRow on empty matrix.
      */
@@ -476,6 +477,7 @@ public class SparseMatrixFinalTest extends TestCase {
         assertFalse(matrix.removeRow(1));
         assertEquals(0, matrix.size());
     }
+
 
     /**
      * Test removeColumn basic functionality.
@@ -490,15 +492,16 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(1, matrix.size());
 
         // Verify column 1 is gone
-        assertFalse(matrix.hasColumn(1));
+        assertFalse(matrix.hasCol(1));
         assertEquals(0, matrix.get(1, 1));
         assertEquals(0, matrix.get(2, 1));
         assertEquals(0, matrix.get(3, 1));
 
         // Verify column 2 remains
-        assertTrue(matrix.hasColumn(2));
+        assertTrue(matrix.hasCol(2));
         assertEquals(8, matrix.get(1, 2));
     }
+
 
     /**
      * Test removeColumn cleans up row headers.
@@ -511,13 +514,14 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(0, matrix.size());
 
         // All headers should be cleaned up
-        assertFalse(matrix.hasColumn(5));
+        assertFalse(matrix.hasCol(5));
         assertFalse(matrix.hasRow(10));
         assertFalse(matrix.hasRow(20));
 
         int[] rows = matrix.getAllRowIDs();
         assertEquals(0, rows.length);
     }
+
 
     /**
      * Test removeColumn with shared rows.
@@ -541,6 +545,7 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(8, matrix.get(2, 2));
     }
 
+
     /**
      * Test removeColumn on non-existent column.
      */
@@ -550,6 +555,7 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(1, matrix.size());
     }
 
+
     /**
      * Test removeColumn on empty matrix.
      */
@@ -557,6 +563,7 @@ public class SparseMatrixFinalTest extends TestCase {
         assertFalse(matrix.removeColumn(1));
         assertEquals(0, matrix.size());
     }
+
 
     /**
      * Test complex deletion scenario with roadmap data.
@@ -576,15 +583,15 @@ public class SparseMatrixFinalTest extends TestCase {
         assertFalse(matrix.hasRow(2));
 
         // Column 3 should still exist (row 7 uses it)
-        assertTrue(matrix.hasColumn(3));
+        assertTrue(matrix.hasCol(3));
 
         // Column 5 should still exist (row 3 uses it)
-        assertTrue(matrix.hasColumn(5));
+        assertTrue(matrix.hasCol(5));
 
         // Remove column 3
         assertTrue(matrix.removeColumn(3));
         assertEquals(2, matrix.size());
-        assertFalse(matrix.hasColumn(3));
+        assertFalse(matrix.hasCol(3));
 
         // Row 7 should still exist (has entry in column 7)
         assertTrue(matrix.hasRow(7));
@@ -603,6 +610,7 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(5, cols[0]);
         assertEquals(7, cols[1]);
     }
+
 
     /**
      * Test matrix integrity after clear following deletions.

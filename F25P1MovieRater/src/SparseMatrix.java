@@ -5,6 +5,9 @@ public class SparseMatrix {
     private int numRows;
     private int numCols;
 
+    /**
+     * Represents the internal reviewer scores in the movie for our sparsematrix
+     */
     private class MatrixNode {
         private int score;
         private int reviewer;
@@ -12,6 +15,13 @@ public class SparseMatrix {
 
         private MatrixNode down, right;
 
+        /**
+         * Constructor
+         * 
+         * @param rating
+         * @param name
+         * @param movieID
+         */
         public MatrixNode(int rating, int name, int movieID) {
             score = rating;
             reviewer = name;
@@ -19,56 +29,114 @@ public class SparseMatrix {
         }
 
 
+        /**
+         * Returns down node, ie next reviewer that scored the movie
+         * 
+         * @return
+         */
         public MatrixNode getDown() {
             return down;
         }
 
 
+        /**
+         * returns the right node, ie the next movie the reviewer scored
+         * 
+         * @return
+         */
         public MatrixNode getRight() {
             return right;
         }
 
 
+        /**
+         * returns the score given
+         * 
+         * @return
+         */
         public int getScore() {
             return score;
         }
 
 
+        /**
+         * Returns the reviewer index which is also the row index
+         * 
+         * @return
+         */
         public int getReviewer() {
             return reviewer;
         }
 
 
+        /**
+         * Returns the movie index which is also the column index
+         * 
+         * @return
+         */
         public int getMovie() {
             return movie;
         }
 
 
+        /**
+         * Setter for the down node
+         * 
+         * @param insert
+         */
         public void setDown(MatrixNode insert) {
             down = insert;
         }
 
 
+        /**
+         * Setter for the right node
+         * 
+         * @param nextNode
+         */
         public void setRight(MatrixNode nextNode) {
             right = nextNode;
         }
 
 
+        /**
+         * Setter for the score
+         * 
+         * @param newScore
+         */
         public void setScore(int newScore) {
             score = newScore;
         }
 
 
+        /**
+         * Evaluates the int data fields equality to the passed ints
+         * 
+         * @param rating
+         * @param review
+         * @param pic
+         * @return
+         */
         public boolean equals(int rating, int review, int pic) {
             return score == rating && reviewer == review && movie == pic;
         }
 
 
+        /**
+         * Equals to check that the location indices are the same
+         * 
+         * @param review
+         * @param pic
+         * @return
+         */
         public boolean equals(int review, int pic) {
             return reviewer == review && movie == pic;
         }
 
 
+        /**
+         * Equals method for a generic object
+         */
         public boolean equals(Object obj) {
             if (obj instanceof MatrixNode) {
                 MatrixNode check = (MatrixNode)obj;
@@ -88,11 +156,22 @@ public class SparseMatrix {
         private HeaderNode next;
         private int length;
 
+        /**
+         * Constructor, the id field must always be instantiated
+         * 
+         * @param name
+         */
         public HeaderNode(int name) {
             id = name;
         }
 
 
+        /**
+         * Constructor that includes an initial first review and score
+         * 
+         * @param name
+         * @param review
+         */
         public HeaderNode(int name, MatrixNode review) {
             id = name;
             first = review;
@@ -100,46 +179,88 @@ public class SparseMatrix {
         }
 
 
+        /**
+         * Returns the next row or column
+         * 
+         * @return
+         */
         public HeaderNode getNext() {
             return next;
         }
 
 
+        /**
+         * Returns the first stored review score
+         * 
+         * @return
+         */
         public MatrixNode getFirst() {
             return first;
         }
 
 
+        /**
+         * Returns the index of the row or column
+         * 
+         * @return
+         */
         public int getID() {
             return id;
         }
 
 
+        /**
+         * Setter for the next field
+         * 
+         * @param newID
+         */
         public void setNext(HeaderNode newID) {
             next = newID;
         }
 
 
+        /**
+         * Setter for the first field
+         * 
+         * @param newFirst
+         */
         public void setFirst(MatrixNode newFirst) {
             first = newFirst;
         }
 
 
+        /**
+         * Determines if a HeaderNode points to no more MatrixNodes
+         * 
+         * @return
+         */
         public boolean isEmpty() {
             return first == null;
         }
 
 
+        /**
+         * Increases the length
+         */
         public void countUp() {
             length++;
         }
 
 
+        /**
+         * Returns the number of entries in a given row or column
+         * 
+         * @return
+         */
         public int getLength() {
             return length;
         }
     }
 
+    /*
+     * Constructor method, using -1 to signify the sentinel nodes as data should
+     * always be positively indexed
+     */
     public SparseMatrix() {
         reviewers = new HeaderNode(-1);
         movies = new HeaderNode(-1);
@@ -147,15 +268,29 @@ public class SparseMatrix {
     }
 
 
+    /**
+     * Inserts a single score, can handle creating new entries for the
+     * HeaderNodes
+     * 
+     * @param score
+     * @param reviewer
+     * @param movie
+     * @return
+     */
     public boolean insert(int score, int reviewer, int movie) {
+        // Out of bounds check
         if (score <= -1 || reviewer <= -1 || movie <= -1) {
             return false;
         }
 
+        // Checks if a new score is being inserted to correctly update the
+        // number of entries
         if (!get(reviewer, movie)) {
             size++;
         }
 
+        // Delegates the insertion into memory into helper functions as the
+        // singly linked structure demands
         MatrixNode newNode = new MatrixNode(score, reviewer, movie);
         insertByRow(newNode);
         insertByColumn(newNode);
@@ -163,25 +298,36 @@ public class SparseMatrix {
     }
 
 
-    public void insertByColumn(MatrixNode newNode) {
+    private void insertByColumn(MatrixNode newNode) {
+        // control block to see if the column already exists
         if (hasCol(newNode.getMovie())) {
             HeaderNode curr = findCol(newNode.getMovie());
+
             if (newNode.getMovie() == curr.getID()) {
                 MatrixNode matrixInsert = curr.getFirst();
+
+                // iterates through list to find the right insertion spot
                 while (matrixInsert != null) {
-                    // End of list
+
+                    // End of list insertion
                     if (matrixInsert.getDown() == null) {
+                        // score already exists and must be edited
                         if (matrixInsert.equals(newNode.getReviewer(), newNode
                             .getMovie())) {
                             matrixInsert.setScore(newNode.getScore());
                             return;
                         }
+
+                        // edge case of if there is exactly one entry in the
+                        // HeaderNode
                         else if (matrixInsert == curr.getFirst() && newNode
                             .getReviewer() < matrixInsert.getReviewer()) {
                             newNode.setDown(matrixInsert);
                             curr.setFirst(newNode);
                             return;
                         }
+
+                        // New entry must be inserted at the end of the list
                         else {
                             matrixInsert.setDown(newNode);
                             curr.countUp();
@@ -189,11 +335,13 @@ public class SparseMatrix {
                         }
                     }
                     // Not end of list
+                    // score already exists and must be edited
                     if (matrixInsert.getDown().equals(newNode.getReviewer(),
                         newNode.getMovie())) {
-                        matrixInsert.setScore(newNode.getScore());
+                        matrixInsert.getDown().setScore(newNode.getScore());
                         return;
                     }
+                    // New score to be inserted after curr
                     else if (newNode.getReviewer() < matrixInsert.getDown()
                         .getReviewer()) {
                         newNode.setDown(matrixInsert.getDown());
@@ -204,7 +352,8 @@ public class SparseMatrix {
                     matrixInsert = matrixInsert.getDown();
                 }
             }
-
+            // reviewer doesn't exist and needs to be appended to the end of the
+            // list
             else if (curr.getNext() == null) {
                 HeaderNode newMovie = new HeaderNode(newNode.getMovie(),
                     newNode);
@@ -212,6 +361,8 @@ public class SparseMatrix {
                 newMovie.countUp();
                 return;
             }
+            // case where the movie needs to be inserted in the middle of the
+            // list
             else if (newNode.getMovie() < curr.getNext().getID()) {
                 HeaderNode newMovie = new HeaderNode(newNode.getMovie(),
                     newNode);
@@ -227,38 +378,52 @@ public class SparseMatrix {
     }
 
 
-    public void insertByRow(MatrixNode newNode) {
+    // needs refactoring
+    private void insertByRow(MatrixNode newNode) {
+        // control block to see if the row already exists
         if (hasRow(newNode.getReviewer())) {
             HeaderNode curr = findRow(newNode.getReviewer());
+
             if (newNode.getReviewer() == curr.getID()) {
                 MatrixNode matrixInsert = curr.getFirst();
+
+                // iterates through list to find the right insertion spot
                 while (matrixInsert != null) {
 
-                    // end of list
+                    // End of list insertion
                     if (matrixInsert.getRight() == null) {
+                        // score already exists and must be edited
                         if (matrixInsert.equals(newNode.getReviewer(), newNode
                             .getMovie())) {
                             matrixInsert.setScore(newNode.getScore());
                             return;
                         }
+
+                        // edge case of if there is exactly one entry in the
+                        // HeaderNode
                         else if (matrixInsert == curr.getFirst() && newNode
                             .getMovie() < matrixInsert.getMovie()) {
                             newNode.setRight(matrixInsert);
                             curr.setFirst(newNode);
                             return;
                         }
+
+                        // New entry must be inserted at the end of the list
                         else {
                             matrixInsert.setRight(newNode);
                             curr.countUp();
                             return;
                         }
                     }
-                    // middle of list
+                    // movie doesn't exist and needs to be appended to the
+                    // end of the
                     if (matrixInsert.getRight().equals(newNode.getReviewer(),
                         newNode.getMovie())) {
                         matrixInsert.setScore(newNode.getScore());
                         return;
                     }
+                    // case where the movie needs to be inserted in the middle
+                    // of the list
                     else if (newNode.getMovie() < matrixInsert.getRight()
                         .getMovie()) {
                         newNode.setRight(matrixInsert.getRight());
@@ -270,7 +435,8 @@ public class SparseMatrix {
                 }
             }
 
-            // Movie isn't there
+            // movie doesn't exist and needs to be appended to the end of the
+            // list
             else if (curr.getNext() == null) {
                 HeaderNode newReviewer = new HeaderNode(newNode.getReviewer(),
                     newNode);
@@ -278,6 +444,8 @@ public class SparseMatrix {
                 newReviewer.countUp();
                 return;
             }
+            // case where the movie needs to be inserted in the middle of the
+            // list
             else if (newNode.getReviewer() < curr.getNext().getID()) {
                 HeaderNode newReviewer = new HeaderNode(newNode.getReviewer(),
                     newNode);
@@ -286,9 +454,9 @@ public class SparseMatrix {
                 newReviewer.countUp();
                 return;
             }
-            curr = curr.getNext();
         }
 
+        //
         HeaderNode newReviewer = new HeaderNode(newNode.getReviewer(), newNode);
         HeaderNode curr = reviewers;
         while (curr != null) {
@@ -297,7 +465,7 @@ public class SparseMatrix {
                 numRows++;
                 return;
             }
-            else if(newNode.getReviewer() <= curr.getNext().getID()) {
+            else if (newNode.getReviewer() <= curr.getNext().getID()) {
                 newReviewer.setNext(curr.getNext());
                 curr.setNext(newReviewer);
                 numRows++;
@@ -308,6 +476,13 @@ public class SparseMatrix {
     }
 
 
+    /**
+     * Direct call to edit a score
+     * 
+     * @param score
+     * @param reviewer
+     * @param movie
+     */
     public void edit(int score, int reviewer, int movie) {
         if (hasRow(reviewer)) {
             MatrixNode matrixSearch = findRow(reviewer).getFirst();
@@ -321,6 +496,13 @@ public class SparseMatrix {
     }
 
 
+    /**
+     * Returns a truth value for the if the score exists
+     * 
+     * @param reviewer
+     * @param movie
+     * @return
+     */
     public boolean get(int reviewer, int movie) {
         if (reviewers.getNext() == null) {
             return false;
@@ -344,76 +526,97 @@ public class SparseMatrix {
     }
 
 
-    public void delete(int reviewer, int movie) {
+    /**
+     * Removes a score from the matrix by changing the pointers to no longer
+     * reference the passed point
+     * 
+     * @param reviewer
+     * @param movie
+     */
+    public boolean remove(int reviewer, int movie) {
         if (!get(reviewer, movie)) {
-            return;
+            return false;
         }
         deleteByRow(reviewer, movie);
         deleteByColumn(reviewer, movie);
         size--;
+        return true;
     }
 
 
-    public void deleteByRow(int reviewer, int movie) {
+    private void deleteByRow(int reviewer, int movie) {
+        // Uses helper findRow to obtain the pointer to the correct row and then
+        // iterates through matrix entries
         HeaderNode curr = findRow(reviewer);
         MatrixNode matrixDelete = curr.getFirst();
         while (matrixDelete != null) {
+            // Checks each node
             if (matrixDelete.getRight().equals(reviewer, movie)) {
                 matrixDelete.setRight(matrixDelete.getRight().getRight());
                 break;
             }
             matrixDelete = matrixDelete.getRight();
         }
+        // If we removed the last entry for the row then it should be removed
         if (curr.isEmpty()) {
             removeRow(reviewer);
         }
     }
 
 
-    public void deleteByColumn(int reviewer, int movie) {
+    private void deleteByColumn(int reviewer, int movie) {
+        // Uses helper findRow to obtain the pointer to the correct row and then
+        // iterates through matrix entries
         HeaderNode curr = findCol(movie);
         MatrixNode matrixDelete = curr.getFirst();
         while (matrixDelete != null) {
+            // Checks each node
             if (matrixDelete.getDown().equals(reviewer, movie)) {
                 matrixDelete.setRight(matrixDelete.getDown().getDown());
                 break;
             }
             matrixDelete = matrixDelete.getDown();
         }
+        // If we removed the last entry for the row then it should be removed
         if (curr.isEmpty()) {
             removeColumn(reviewer);
         }
     }
 
 
-    public void removeRow(int index) {
+    /**
+     * Removes one whole row
+     * 
+     * @param index
+     */
+    public boolean removeRow(int index) {
+        boolean removed = false;
         HeaderNode curr = reviewers.getNext();
+        // If the row to remove is the first one
         if (curr.getID() == index) {
+            removed = true;
             reviewers.setNext(curr.getNext());
         }
+
         else {
             while (curr.getNext() != null) {
                 if (curr.getNext().getID() == index) {
                     // while loop to go through the list to connect the
-                    // remaining
-                    // one
+                    // remaining one
                     curr.setNext(curr.getNext().getNext());
+                    removed = true;
                     break;
                 }
                 curr = curr.getNext();
             }
         }
         curr = movies.getNext();
+        // Look to change the pointers to delete all entries in a row
         while (curr != null) {
             MatrixNode matrixDelete = curr.getFirst();
+            // Checks if the first node needs to be delete
             if (matrixDelete.getReviewer() == index) {
                 curr.setFirst(matrixDelete.getDown());
-                // Necessary conditional if the column also had its last element
-                // deleted
-                if (curr.isEmpty()) {
-                    // do something to delete the headernode
-                    removeColumn(curr.getID());
-                }
             }
             else {
                 while (matrixDelete.getDown() != null) {
@@ -424,34 +627,50 @@ public class SparseMatrix {
                     matrixDelete = matrixDelete.getDown();
                 }
             }
+            // Necessary conditional if the column also had its last element
+            // deleted
+            if (curr.isEmpty()) {
+                // do something to delete the a now empty column
+                removeColumn(curr.getID());
+            }
             curr = curr.getNext();
         }
+        return removed;
     }
 
 
-    public void removeColumn(int index) {
+    /**
+     * Removes one whole column
+     * 
+     * @param index
+     */
+    public boolean removeColumn(int index) {
+        boolean removed = false;
         HeaderNode curr = movies.getNext();
+        // If the row to remove is the first one
         if (curr.getID() == index) {
+            removed = true;
             reviewers.setNext(curr.getNext());
         }
         else {
             while (curr.getNext() != null) {
+                // while loop to go through the list to connect the
+                // remaining one
                 if (curr.getNext().getID() == index) {
                     curr.setNext(curr.getNext().getNext());
+                    removed = true;
                     break;
                 }
                 curr = curr.getNext();
             }
         }
         curr = reviewers.getNext();
+        // Look to change the pointers to delete all entries in a row
         while (curr != null) {
             MatrixNode matrixDelete = curr.getFirst();
+            // Checks if the first node needs to be delete
             if (matrixDelete.getMovie() == index) {
                 curr.setFirst(matrixDelete.getRight());
-                if (curr.isEmpty()) {
-                    // do something to delete the headernode
-                    removeRow(curr.getID());
-                }
             }
             else {
                 while (matrixDelete.getRight() != null) {
@@ -463,11 +682,21 @@ public class SparseMatrix {
                     matrixDelete = matrixDelete.getRight();
                 }
             }
+            // Necessary conditional if the column also had its last element
+            // deleted
+            if (curr.isEmpty()) {
+                // do something to delete the a now empty row
+                removeRow(curr.getID());
+            }
             curr = curr.getNext();
         }
+        return removed;
     }
 
 
+    /**
+     * Prints of the format review: (movie, score)
+     */
     public void print() {
         HeaderNode curr = reviewers.getNext();
         while (curr != null) {
@@ -489,6 +718,10 @@ public class SparseMatrix {
     }
 
 
+    /**
+     * Gives a string representation of the matrix in the format:
+     * review: (movie, score)
+     */
     public String toString() {
         HeaderNode curr = reviewers.getNext();
         String returnString = "";
@@ -512,7 +745,7 @@ public class SparseMatrix {
     }
 
 
-    public double averageColumn(int index) {
+    private double averageColumn(int index) {
         int scoreSum = 0;
         int count = 0;
         if (hasCol(index)) {
@@ -648,7 +881,7 @@ public class SparseMatrix {
     }
 
 
-    private HeaderNode findRow(int index) {
+    public HeaderNode findRow(int index) {
         HeaderNode curr = reviewers.getNext();
         while (curr != null) {
             if (curr.getID() == index) {
@@ -660,7 +893,7 @@ public class SparseMatrix {
     }
 
 
-    private HeaderNode findCol(int index) {
+    public HeaderNode findCol(int index) {
         HeaderNode curr = movies.getNext();
         while (curr != null) {
             if (curr.getID() == index) {
@@ -672,7 +905,7 @@ public class SparseMatrix {
     }
 
 
-    private boolean hasCol(int index) {
+    public boolean hasCol(int index) {
         if (findCol(index) != null) {
             return true;
         }
@@ -682,7 +915,7 @@ public class SparseMatrix {
     }
 
 
-    private boolean hasRow(int index) {
+    public boolean hasRow(int index) {
         if (findRow(index) != null) {
             return true;
         }
@@ -705,6 +938,19 @@ public class SparseMatrix {
     }
 
 
+    public int[] getAllColIDs() {
+        HeaderNode curr = movies.getNext();
+        int[] arr = new int[numCols];
+        int index = 0;
+        while (curr != null) {
+            arr[index] = curr.getID();
+            curr = curr.getNext();
+            index++;
+        }
+        return arr;
+    }
+
+
     public boolean rowSorted(int index) {
         if (hasRow(index)) {
             MatrixNode sortedHead = findRow(index).getFirst();
@@ -714,6 +960,22 @@ public class SparseMatrix {
                     return false;
                 }
                 sortedHead = sortedHead.getRight();
+            }
+            return true;
+        }
+        return false;
+    }
+
+
+    public boolean colSorted(int index) {
+        if (hasCol(index)) {
+            MatrixNode sortedHead = findCol(index).getFirst();
+            while (sortedHead.getDown() != null) {
+                if (sortedHead.getReviewer() > sortedHead.getDown()
+                    .getReviewer()) {
+                    return false;
+                }
+                sortedHead = sortedHead.getDown();
             }
             return true;
         }
