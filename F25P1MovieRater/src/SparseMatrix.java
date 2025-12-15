@@ -796,13 +796,13 @@ public class SparseMatrix {
     public int similarMovie(int index) {
         HeaderNode curr = movies.getNext();
         double benchmark = averageColumn(index);
-        double diff = 0;
+        double diff = 100;
         int mostSimilar = -1;
         while (curr != null) {
             if (index != curr.getID()) {
                 double similarCheck = averageColumn(curr.getID());
                 if (Math.abs(benchmark - similarCheck) < diff) {
-                    diff = benchmark - similarCheck;
+                    diff = Math.abs(benchmark - similarCheck);
                     mostSimilar = curr.getID();
                 }
             }
@@ -815,13 +815,13 @@ public class SparseMatrix {
     public int similarReviewer(int index) {
         HeaderNode curr = reviewers.getNext();
         double benchmark = averageRow(index);
-        double diff = 0;
+        double diff = 100;
         int mostSimilar = -1;
         while (curr != null) {
             if (index != curr.getID()) {
                 double similarCheck = averageRow(curr.getID());
                 if (Math.abs(benchmark - similarCheck) < diff) {
-                    diff = benchmark - similarCheck;
+                    diff = Math.abs(benchmark - similarCheck);
                     mostSimilar = curr.getID();
                 }
             }

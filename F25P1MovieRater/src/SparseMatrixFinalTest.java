@@ -631,4 +631,62 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(1, matrix.size());
         assertEquals(100, matrix.get(10, 10));
     }
+    
+    public void testSimilarity() {
+        matrix.insert(0, 0, 8);
+        matrix.insert(0, 1, 1);
+        matrix.insert(0, 2, 9);
+        matrix.insert(0, 3, 4);
+        matrix.insert(0, 4, 7);
+        matrix.insert(0, 5, 4);
+        matrix.insert(0, 6, 7);
+        matrix.insert(0, 9, 7);
+        matrix.insert(1, 0, 1);
+        matrix.insert(1, 1, 2);
+        matrix.insert(1, 2, 5);
+        matrix.insert(1, 3, 6);
+        matrix.insert(1, 4, 2);
+        matrix.insert(1, 5, 8);
+        matrix.insert(1, 6, 9);
+        matrix.insert(1, 9, 6);
+        matrix.insert(2, 0, 9);
+        matrix.insert(2, 1, 4);
+        matrix.insert(2, 2, 2);
+        matrix.insert(2, 3, 5);
+        matrix.insert(2, 4, 5);
+        matrix.insert(2, 5, 8);
+        matrix.insert(2, 6, 2);
+        matrix.insert(2, 9, 5);
+        matrix.insert(5, 0, 5);
+        matrix.insert(5, 1, 1);
+        matrix.insert(5, 2, 2);
+        matrix.insert(5, 3, 4);
+        matrix.insert(5, 4, 2);
+        matrix.insert(5, 5, 1);
+        matrix.insert(5, 6, 6);
+        matrix.insert(5, 9, 4);
+        matrix.insert(3, 4, 6);
+        matrix.insert(4, 4, 9);
+        matrix.insert(6, 4, 3);
+        matrix.insert(7, 4, 2);
+        matrix.insert(8, 4, 1);
+        matrix.insert(3, 5, 4);
+        matrix.insert(4, 5, 6);
+        matrix.insert(6, 5, 2);
+        matrix.insert(7, 5, 8);
+        matrix.insert(8, 5, 1);
+        matrix.insert(3, 9, 8);
+        matrix.insert(4, 9, 5);
+        matrix.insert(6, 9, 3);
+        matrix.insert(7, 9, 7);
+        matrix.insert(8, 9, 1);        
+        
+        assertEquals(3, matrix.similarReviewer(0));
+        assertEquals(2, matrix.similarReviewer(1));
+        assertEquals(1, matrix.similarReviewer(2));
+        assertEquals(6, matrix.similarReviewer(5));
+        assertEquals(2, matrix.similarMovie(4));
+        assertEquals(3, matrix.similarMovie(5));
+        assertEquals(3, matrix.similarMovie(9));
+    }
 }

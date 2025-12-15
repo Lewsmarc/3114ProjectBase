@@ -47,7 +47,7 @@ public class MovieRaterDB implements MovieRater {
         if(score > 10 || score <= 0) {
             return false;
         }
-        matrix.insertScore(score, reviewer, movie);
+        matrix.insert(score, reviewer, movie);
         return true;
     }
 
@@ -61,7 +61,7 @@ public class MovieRaterDB implements MovieRater {
      *         False if no such reviewer in the database.
      */
     public boolean deleteReviewer(int reviewer) {
-        if(matrix.rowExists(reviewer)) {
+        if(matrix.findRow(reviewer) != null) {
           matrix.removeRow(reviewer);  
         }
         return false;
@@ -77,7 +77,7 @@ public class MovieRaterDB implements MovieRater {
      *         False if no such movie in the database.
      */
     public boolean deleteMovie(int movie) {
-        if(matrix.colExists(movie)) {
+        if(matrix.findCol(movie) != null) {
             matrix.removeColumn(movie);  
           }
           return false;
@@ -94,8 +94,8 @@ public class MovieRaterDB implements MovieRater {
      *         False if no such score in the database.
      */
     public boolean deleteScore(int reviewer, int movie) {
-        if(matrix.search(reviewer, movie)) {
-            matrix.delete(reviewer, movie);
+        if(matrix.get(reviewer, movie) != -1) {
+            matrix.remove(reviewer, movie);
             return true;
         }
         return false;
@@ -123,7 +123,7 @@ public class MovieRaterDB implements MovieRater {
      * @return String representing the listing, null if no such reviewer
      */
     public String listReviewer(int reviewer) {
-        return matrix.getRow(reviewer);
+        return matrix.getRowString(reviewer);
     }
 
 
@@ -135,7 +135,7 @@ public class MovieRaterDB implements MovieRater {
      * @return String representing the listing, null if no such movie
      */
     public String listMovie(int movie) {
-        return matrix.getCol(movie);
+        return matrix.getColString(movie);
     }
 
 
