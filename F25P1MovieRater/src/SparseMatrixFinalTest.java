@@ -679,7 +679,8 @@ public class SparseMatrixFinalTest extends TestCase {
         matrix.insert(4, 9, 5);
         matrix.insert(6, 9, 3);
         matrix.insert(7, 9, 7);
-        matrix.insert(8, 9, 1);        
+        matrix.insert(8, 9, 1);
+        matrix.similarMovie(11);
         
         assertEquals(3, matrix.similarReviewer(0));
         assertEquals(2, matrix.similarReviewer(1));
@@ -688,5 +689,34 @@ public class SparseMatrixFinalTest extends TestCase {
         assertEquals(2, matrix.similarMovie(4));
         assertEquals(3, matrix.similarMovie(5));
         assertEquals(3, matrix.similarMovie(9));
+        assertEquals(-1, matrix.similarMovie(11));
+        assertEquals(-1, matrix.similarReviewer(11));
+    }
+    
+    public void testSimilarityEmpty() {
+        assertEquals(-1, matrix.similarReviewer(0));
+        assertEquals(-1, matrix.similarMovie(0));
+    }
+    
+    public void testSimilaritySingleRow() {
+        matrix.insert(0, 0, 8);
+        matrix.insert(0, 1, 1);
+        matrix.insert(0, 2, 9);
+        matrix.insert(0, 3, 4);
+        matrix.insert(0, 4, 7);
+        matrix.insert(0, 5, 4);
+        matrix.insert(0, 6, 7);
+        matrix.insert(0, 9, 7);
+        
+        assertEquals(-1, matrix.similarReviewer(0));
+    }
+    
+    public void testSimilaritySingleColumn() {
+        matrix.insert(4, 5, 6);
+        matrix.insert(6, 5, 2);
+        matrix.insert(7, 5, 8);
+        matrix.insert(8, 5, 1);
+        
+        assertEquals(-1, matrix.similarMovie(5));
     }
 }

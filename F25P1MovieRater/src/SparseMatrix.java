@@ -154,6 +154,7 @@ public class SparseMatrix {
         private int id;
         private MatrixNode first;
         private HeaderNode next;
+        // private int length;
 
         /**
          * Constructor, the id field must always be instantiated
@@ -174,6 +175,7 @@ public class SparseMatrix {
         public HeaderNode(int name, MatrixNode review) {
             id = name;
             first = review;
+            // length = 1;
         }
 
 
@@ -225,6 +227,19 @@ public class SparseMatrix {
         public void setFirst(MatrixNode newFirst) {
             first = newFirst;
         }
+
+// public void countUp() {
+// length++;
+// }
+//
+//
+// public void countDown() {
+// length--;
+// }
+
+// public int getLength() {
+// return length;
+// }
 
 
         /**
@@ -304,12 +319,14 @@ public class SparseMatrix {
                             .getReviewer() < matrixInsert.getReviewer()) {
                             newNode.setDown(matrixInsert);
                             curr.setFirst(newNode);
+                            // curr.countUp();
                             return;
                         }
 
                         // New entry must be inserted at the end of the list
                         else {
                             matrixInsert.setDown(newNode);
+                            // curr.countUp();
                             return;
                         }
                     }
@@ -325,6 +342,7 @@ public class SparseMatrix {
                         .getReviewer()) {
                         newNode.setDown(matrixInsert.getDown());
                         matrixInsert.setDown(newNode);
+                        // curr.countUp();
                         return;
                     }
                     matrixInsert = matrixInsert.getDown();
@@ -395,12 +413,14 @@ public class SparseMatrix {
                             .getMovie() < matrixInsert.getMovie()) {
                             newNode.setRight(matrixInsert);
                             curr.setFirst(newNode);
+                            // curr.countUp();
                             return;
                         }
 
                         // New entry must be inserted at the end of the list
                         else {
                             matrixInsert.setRight(newNode);
+                            // curr.countUp();
                             return;
                         }
                     }
@@ -417,6 +437,7 @@ public class SparseMatrix {
                         .getMovie()) {
                         newNode.setRight(matrixInsert.getRight());
                         matrixInsert.setRight(newNode);
+                        // curr.countUp();
                         return;
                     }
                     matrixInsert = matrixInsert.getRight();
@@ -546,6 +567,7 @@ public class SparseMatrix {
                 // Checks each node
                 if (matrixDelete.getRight().equals(reviewer, movie)) {
                     matrixDelete.setRight(matrixDelete.getRight().getRight());
+                    // curr.countDown();
                     break;
                 }
                 matrixDelete = matrixDelete.getRight();
@@ -574,6 +596,7 @@ public class SparseMatrix {
                 // Checks each node
                 if (matrixDelete.getDown().equals(reviewer, movie)) {
                     matrixDelete.setDown(matrixDelete.getDown().getDown());
+                    // curr.countDown();
                     break;
                 }
                 matrixDelete = matrixDelete.getDown();
@@ -594,7 +617,7 @@ public class SparseMatrix {
     public boolean removeRow(int index) {
         boolean removed = false;
         HeaderNode curr = reviewers.getNext();
-        if(curr == null) {
+        if (curr == null) {
             return false;
         }
         // If the row to remove is the first one
@@ -656,7 +679,7 @@ public class SparseMatrix {
     public boolean removeColumn(int index) {
         boolean removed = false;
         HeaderNode curr = movies.getNext();
-        if(curr == null) {
+        if (curr == null) {
             return false;
         }
         // If the row to remove is the first one
@@ -793,14 +816,79 @@ public class SparseMatrix {
     }
 
 
+    public double averageRow(int index, int select) {
+        int scoreSum = 0;
+        int count = 0;
+        if (hasRow(index)) {
+            MatrixNode average = findRow(index).getFirst();
+            MatrixNode check = findRow(select).getFirst();
+            while (average != null && check != null) {
+                if (average.getMovie() == check.getMovie()) {
+                    scoreSum += average.getScore();
+                    count++;
+                    check = check.getRight();
+                    average = average.getRight();
+                }
+                else if (average.getMovie() < check.getMovie()) {
+                    average = average.getRight();
+                }
+                else {
+                    check = check.getRight();
+                }
+            }
+            if (count != 0) {
+                return (double)scoreSum / count;
+            }
+            else {
+                return -1;
+            }
+        }
+        return -1;
+    }
+
+
+    public double averageColumn(int index, int select) {
+        int scoreSum = 0;
+        int count = 0;
+        if (hasCol(index)) {
+            MatrixNode average = findCol(index).getFirst();
+            MatrixNode check = findCol(select).getFirst();
+            while (average != null && check != null) {
+                if (average.getReviewer() == check.getReviewer()) {
+                    scoreSum += average.getScore();
+                    count++;
+                    check = check.getDown();
+                    average = average.getDown();
+                }
+                else if (average.getReviewer() < check.getReviewer()) {
+                    average = average.getDown();
+                }
+                else {
+                    check = check.getDown();
+                }
+            }
+            if (count != 0) {
+                return (double)scoreSum / count;
+            }
+            else {
+                return -1;
+            }
+        }
+        return -1;
+    }
+
+
     public int similarMovie(int index) {
         HeaderNode curr = movies.getNext();
         double benchmark = averageColumn(index);
         double diff = 100;
         int mostSimilar = -1;
+        if (benchmark == -1) {
+            return mostSimilar;
+        }
         while (curr != null) {
             if (index != curr.getID()) {
-                double similarCheck = averageColumn(curr.getID());
+                double similarCheck = averageColumn(curr.getID(), index);
                 if (Math.abs(benchmark - similarCheck) < diff) {
                     diff = Math.abs(benchmark - similarCheck);
                     mostSimilar = curr.getID();
@@ -817,9 +905,13 @@ public class SparseMatrix {
         double benchmark = averageRow(index);
         double diff = 100;
         int mostSimilar = -1;
+        if (benchmark == -1) {
+            return mostSimilar;
+        }
         while (curr != null) {
             if (index != curr.getID()) {
-                double similarCheck = averageRow(curr.getID());
+                double similarCheck = averageRow(curr.getID(), index);
+                // if(curr.getID exists in the array with the all
                 if (Math.abs(benchmark - similarCheck) < diff) {
                     diff = Math.abs(benchmark - similarCheck);
                     mostSimilar = curr.getID();
