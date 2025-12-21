@@ -47,7 +47,7 @@ public class MovieRaterDB implements MovieRater {
         if(score > 10 || score <= 0) {
             return false;
         }
-        matrix.insert(score, reviewer, movie);
+        matrix.insert(reviewer, movie, score);
         return true;
     }
 
@@ -110,7 +110,6 @@ public class MovieRaterDB implements MovieRater {
      * @return String representing the listing, empty string if there are none
      */
     public String printRatings() {
-        System.out.println(matrix);
         return matrix.toString();
     }
 

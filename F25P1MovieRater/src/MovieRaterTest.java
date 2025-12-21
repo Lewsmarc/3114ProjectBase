@@ -50,6 +50,7 @@ public class MovieRaterTest extends TestCase {
     {
         assertTrue(it.addReview(2, 3, 7));
         assertTrue(it.addReview(2, 5, 5));
+        it.addReview(2, 5, 5);
         assertFuzzyEquals(it.printRatings(), "2: (3, 7) (5, 5)");
         assertFuzzyEquals(it.listMovie(3), "3: 7");
         assertFuzzyEquals(it.listReviewer(2), "2: 7 5");
@@ -181,6 +182,7 @@ public class MovieRaterTest extends TestCase {
         // Reviewer 3 rates movies 5, 6 (no overlap with reviewer 1)
         it.addReview(3, 5, 5);
         it.addReview(3, 6, 5);
+        it.similarReviewer(1);
 
         assertEquals(-1, it.similarReviewer(1));
     }
@@ -545,10 +547,13 @@ public class MovieRaterTest extends TestCase {
         // Create 10 other reviewers with varying similarities
         for (int i = 1; i <= 10; i++) {
             it.addReview(i, 1, 5);
-            it.addReview(i, 2, 5 + i);
+            it.addReview(i, 2, (5 + i) % 10);
             // Similarity for reviewer i = (0 + i) / 2 = i/2
         }
-
+        it.addReview(5, 2, 10);
+        it.addReview(10, 2, 6);
+        
+        it.similarReviewer(0);
         // Reviewer 1 has lowest similarity (0.5)
         assertEquals(1, it.similarReviewer(0));
     }
@@ -565,8 +570,10 @@ public class MovieRaterTest extends TestCase {
         // Create 10 other movies with varying similarities
         for (int i = 1; i <= 10; i++) {
             it.addReview(1, i, 5);
-            it.addReview(2, i, 5 + i);
+            it.addReview(2, i, (5 + i) % 10);
         }
+        it.addReview(2, 5, 10);
+        it.addReview(2, 10, 6);
 
         // Movie 1 has lowest similarity
         assertEquals(1, it.similarMovie(0));

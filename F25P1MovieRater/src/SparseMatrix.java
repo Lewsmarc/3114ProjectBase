@@ -134,6 +134,15 @@ public class SparseMatrix {
         }
 
 
+        public boolean hasPlace(Object obj) {
+            if (obj instanceof MatrixNode) {
+                MatrixNode check = (MatrixNode)obj;
+                return equals(check.getReviewer(), check.getMovie());
+            }
+            return false;
+        }
+
+
         /**
          * Equals method for a generic object
          */
@@ -307,8 +316,7 @@ public class SparseMatrix {
                     // End of list insertion
                     if (matrixInsert.getDown() == null) {
                         // score already exists and must be edited
-                        if (matrixInsert.equals(newNode.getReviewer(), newNode
-                            .getMovie())) {
+                        if (matrixInsert.hasPlace(newNode)) {
                             matrixInsert.setScore(newNode.getScore());
                             return;
                         }
@@ -332,8 +340,7 @@ public class SparseMatrix {
                     }
                     // Not end of list
                     // score already exists and must be edited
-                    if (matrixInsert.getDown().equals(newNode.getReviewer(),
-                        newNode.getMovie())) {
+                    if (matrixInsert.hasPlace(newNode)) {
                         matrixInsert.getDown().setScore(newNode.getScore());
                         return;
                     }
@@ -401,8 +408,7 @@ public class SparseMatrix {
                     // End of list insertion
                     if (matrixInsert.getRight() == null) {
                         // score already exists and must be edited
-                        if (matrixInsert.equals(newNode.getReviewer(), newNode
-                            .getMovie())) {
+                        if (matrixInsert.hasPlace(newNode)) {
                             matrixInsert.setScore(newNode.getScore());
                             return;
                         }
@@ -426,8 +432,7 @@ public class SparseMatrix {
                     }
                     // movie doesn't exist and needs to be appended to the
                     // end of the
-                    if (matrixInsert.getRight().equals(newNode.getReviewer(),
-                        newNode.getMovie())) {
+                    if (matrixInsert.hasPlace(newNode)) {
                         matrixInsert.setScore(newNode.getScore());
                         return;
                     }
@@ -494,7 +499,7 @@ public class SparseMatrix {
         if (hasRow(reviewer)) {
             MatrixNode matrixSearch = findRow(reviewer).getFirst();
             while (matrixSearch != null) {
-                if (matrixSearch.equals(score, reviewer, movie)) {
+                if (matrixSearch.equals(reviewer, movie)) {
                     matrixSearch.setScore(score);
                 }
                 matrixSearch = matrixSearch.getRight();
@@ -889,7 +894,8 @@ public class SparseMatrix {
         while (curr != null) {
             if (index != curr.getID()) {
                 double similarCheck = averageColumn(curr.getID(), index);
-                if (Math.abs(benchmark - similarCheck) < diff) {
+                if (similarCheck != -1 && Math.abs(benchmark
+                    - similarCheck) < diff) {
                     diff = Math.abs(benchmark - similarCheck);
                     mostSimilar = curr.getID();
                 }
@@ -912,7 +918,8 @@ public class SparseMatrix {
             if (index != curr.getID()) {
                 double similarCheck = averageRow(curr.getID(), index);
                 // if(curr.getID exists in the array with the all
-                if (Math.abs(benchmark - similarCheck) < diff) {
+                if (similarCheck != -1 && Math.abs(benchmark
+                    - similarCheck) < diff) {
                     diff = Math.abs(benchmark - similarCheck);
                     mostSimilar = curr.getID();
                 }

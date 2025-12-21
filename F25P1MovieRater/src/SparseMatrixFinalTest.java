@@ -680,7 +680,6 @@ public class SparseMatrixFinalTest extends TestCase {
         matrix.insert(6, 9, 3);
         matrix.insert(7, 9, 7);
         matrix.insert(8, 9, 1);
-        matrix.similarMovie(11);
         
         assertEquals(3, matrix.similarReviewer(0));
         assertEquals(2, matrix.similarReviewer(1));
