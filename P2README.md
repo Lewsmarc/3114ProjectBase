@@ -4,11 +4,12 @@ The City record is the main encapsulation for all the city data we will be track
 
 Research how to compare string data
 
-Milestone 1:
+Milestone 1: Done
 Test first little edge cases, basic functionality
 City records: create a record, erase a record, edit, support range queries, and access the x,y coordinates as one data structure, and city names. Validation for x,y coordinate ie two cities cannot share the same coordinate, but two cities can share the same name, no negative coordinates, no city name can be an empty string.
 1-2 days expected time
-Milestone 2: 
+Note: expect more to be added to city record as functionality needs increase
+Milestone 2: Started, so far insert, and search, delete WIP
 Write tests first to understand how insert, search, and delete will handle edge cases and to determine the complexity of the logic
 BST insert, search, and delete- considerations for keeping the tree balanced, 
 2-3 days for basic insert, search, delete functionality, maybe 2 extra days to write tree balancing logic
